@@ -35,5 +35,6 @@ export class ProductPage {
     }
 
     return productCard;
+    
   }
 }
