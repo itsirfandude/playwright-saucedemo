@@ -2,11 +2,17 @@ import { test, expect } from "@playwright/test";
 import { LoginPage } from "../pages/LoginPage";
 import { ProductPage } from "../pages/ProductPage";
 import { CartPage } from "../pages/CartPage";
+import { CheckoutPage } from "../pages/CheckoutPage"; 
+
 
 test("End-to-End: Login → Add Product → View Cart", async ({ page }) => {
   const loginPage = new LoginPage(page);
   const productPage = new ProductPage(page);
   const cartPage = new CartPage(page);
+  const checkoutPage = new CheckoutPage(page);
+
+  
+
 
   // 1. Login
   await loginPage.goto();
@@ -27,4 +33,23 @@ test("End-to-End: Login → Add Product → View Cart", async ({ page }) => {
   await cartPage.removeFromCart("Test.allTheThings() T-Shirt (Red)");
   await expect(page.locator(".shopping_cart_badge")).toHaveText("2");
   await cartPage.goToCheckout();
+
+  await checkoutPage.fillCheckoutInfo("i","s","64");
+
+  await expect(page.locator("data-test=shipping-info-value")).toHaveText(
+    "Free Pony Express Delivery!"
+  );
+  await expect(page.locator("data-test=payment-info-label")).toHaveText(
+    "Payment Information:"
+  );
+  await checkoutPage.finishCheckout();
+  await checkoutPage.getConfirmationMessage();
+  await expect(page.locator("data-test=complete-header")).toHaveText(
+    "Thank you for your order!"
+  );
+  await checkoutPage.goHome();
+
+  
+
+
 });
