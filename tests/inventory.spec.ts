@@ -22,6 +22,12 @@ test("Getting product list", async ({ page }) => {
   console.log("Product count:", count);
   console.log("Titles:", titles);
 });
+test("Add non-existing product to cart should fail", async ({ page }) => {
+ 
+
+  const result = await productPage.addToCartByProductName("Non-Existing Product");
+  expect(result).toBeNull(); // or expect an error message or no action
+});
 
 test("Managing products", async ({ page }) => {
 

@@ -7,6 +7,8 @@ export class ProductPage {
     this.page = page;
   }
 
+ 
+
   async getInventoryItemsCount(): Promise<number> {
     return await this.page.locator(".inventory_item").count();
   }
@@ -16,12 +18,13 @@ export class ProductPage {
     return await items.allTextContents();
   }
   async addToCartByProductName(productName: string) {
-    const productCard = this.page
-      .locator(".inventory_item")
-      .filter({ hasText: productName });
+    const productCard = this.page.locator(".inventory_item").filter({ hasText: productName });
+    const count = await productCard.count();
+    if (count === 0) {
+      return null; // ✅ exit early if product not found
+    }
     await productCard.locator("button").click();
     return productCard;
-    // means it's in cart
   }
 
   async removeFromCartByProductName(productName: string) {
@@ -35,6 +38,5 @@ export class ProductPage {
     }
 
     return productCard;
-    
   }
 }
